@@ -13,6 +13,7 @@ using DurandalAuth.Domain.Model;
 using DurandalAuth.Data;
 using DurandalAuth.Web.Helpers;
 using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security.DataProtection;
 
 namespace DurandalAuth.Web
 {
@@ -42,6 +43,8 @@ namespace DurandalAuth.Web
         public static System.Func<ApplicationUserManager> UserManagerFactory { get; set; }
 
         public static string PublicClientId { get; private set; }
+
+        internal static IDataProtectionProvider DataProtectionProvider { get; private set; }
 
         public void ConfigureAuth(IAppBuilder app)
         {

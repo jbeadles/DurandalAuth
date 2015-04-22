@@ -49,16 +49,13 @@ namespace DurandalAuth.Web.Controllers
 			}
 		}
 		IUnitOfWork UnitOfwork { get; set; }
-		ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; set; }
 
 		/// <summary>
 		/// ctor
 		/// </summary>
-		public AccountController(IUnitOfWork unitofwork,                                  
-								 ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
+		public AccountController(IUnitOfWork unitofwork)
 		{
 			this.UnitOfwork = unitofwork;
-			this.AccessTokenFormat = accessTokenFormat;
 		}
 
 		/// <summary>
@@ -361,44 +358,44 @@ namespace DurandalAuth.Web.Controllers
 		/// </summary>
 		/// <param name="model">External login model</param>
 		/// <returns>Http 400 or 200</returns>
-		[Route("AddExternalLogin")]
-		public async Task<IHttpActionResult> AddExternalLogin(AddExternalLoginBindingModel model)
-		{
-			if (!ModelState.IsValid)
-			{
-				return BadRequest(ModelState);
-			}
+        //[Route("AddExternalLogin")]
+        //public async Task<IHttpActionResult> AddExternalLogin(AddExternalLoginBindingModel model)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
 
-			Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
+        //    Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
 
-			AuthenticationTicket ticket = AccessTokenFormat.Unprotect(model.ExternalAccessToken);
+        //    AuthenticationTicket ticket = AccessTokenFormat.Unprotect(model.ExternalAccessToken);
 
-			if (ticket == null || ticket.Identity == null || (ticket.Properties != null
-				&& ticket.Properties.ExpiresUtc.HasValue
-				&& ticket.Properties.ExpiresUtc.Value < DateTimeOffset.UtcNow))
-			{
-				return BadRequest("Failed to login to the external provider.");
-			}
+        //    if (ticket == null || ticket.Identity == null || (ticket.Properties != null
+        //        && ticket.Properties.ExpiresUtc.HasValue
+        //        && ticket.Properties.ExpiresUtc.Value < DateTimeOffset.UtcNow))
+        //    {
+        //        return BadRequest("Failed to login to the external provider.");
+        //    }
 
-			ExternalLoginData externalData = ExternalLoginData.FromIdentity(ticket.Identity);
+        //    ExternalLoginData externalData = ExternalLoginData.FromIdentity(ticket.Identity);
 
-			if (externalData == null)
-			{
-				return BadRequest("This external login is already associated with an account.");
-			}
+        //    if (externalData == null)
+        //    {
+        //        return BadRequest("This external login is already associated with an account.");
+        //    }
 
-			IdentityResult result = await UserManager.AddLoginAsync(User.Identity.GetUserId(),
-				new UserLoginInfo(externalData.LoginProvider, externalData.ProviderKey));
+        //    IdentityResult result = await UserManager.AddLoginAsync(User.Identity.GetUserId(),
+        //        new UserLoginInfo(externalData.LoginProvider, externalData.ProviderKey));
 
-			IHttpActionResult errorResult = GetErrorResult(result);
+        //    IHttpActionResult errorResult = GetErrorResult(result);
 
-			if (errorResult != null)
-			{
-				return errorResult;
-			}
+        //    if (errorResult != null)
+        //    {
+        //        return errorResult;
+        //    }
 
-			return Ok();
-		}
+        //    return Ok();
+        //}
 
 		/// <summary>
 		/// Remove login from user account

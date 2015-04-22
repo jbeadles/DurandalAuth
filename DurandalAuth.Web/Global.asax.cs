@@ -22,6 +22,7 @@ namespace DurandalAuth.Web
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             AuthConfig.RegisterMVCAuth(GlobalFilters.Filters);
             AuthConfig.RegisterWebApiAuth(GlobalConfiguration.Configuration);
+
         }
     }
 }
